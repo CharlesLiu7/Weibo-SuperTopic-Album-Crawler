@@ -24,10 +24,10 @@ class Crawler(object):
         # 断点数据
         self.filename = self.page_id + '_resume.pkl.gz'
         if os.path.isfile(self.filename):
-            with gzip.open(filename, 'rb') as f:
+            with gzip.open(self.filename, 'rb') as f:
                 self.since_id, self.page = pickle.load(f)
             self.logger.info(
-                Fore.GREEN + 'Resuming from {0} with page={1}'.format(filename, self.page))
+                Fore.GREEN + 'Resuming from {0} with page={1}'.format(self.filename, self.page))
         else:
             self.since_id = ''
             self.page = 2  # Page starts from 2
@@ -86,10 +86,10 @@ class Crawler(object):
                     if 'uid' not in d or 'mid' not in d or 'pid' not in d:
                         #  print(d)
                         continue
-                    imgr = WeiboApi.get(
-                        LARGE(uid=d['uid'], mid=d['mid'], pid=d['pid']))
-                    bb = BeautifulSoup(imgr.text, features="lxml")
                     try:
+                        imgr = WeiboApi.get(
+                            LARGE(uid=d['uid'], mid=d['mid'], pid=d['pid']))
+                        bb = BeautifulSoup(imgr.text, features="lxml")
                         uri = bb.find('img').attrs['src']
                         filename = os.path.join(
                             self.root, 'large/' + uri[uri.rfind('/')+1:])
@@ -123,6 +123,8 @@ class Crawler(object):
                         self.since_id = urllib.parse.unquote(dic['since_id'])
                         self.page += 1
                         break
+            if not flag:
+                self.logger.info(Fore.BLUE + 'Crawler finished')
 
     def __init_folder(self):
         """
