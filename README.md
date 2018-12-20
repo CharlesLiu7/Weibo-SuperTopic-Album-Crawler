@@ -2,15 +2,15 @@
 
 ![python](https://img.shields.io/badge/Python-3.7-brightgreen.svg)![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)
 
-新浪微博超级话题相册爬虫。
+新浪微博超级话题相册爬虫。包含缩略图和大图
 
 ## Usage
 
 1. 安装
 
     ```shell
-    git clone git@github.com:Lodour/Weibo-Album-Crawler.git
-    cd Weibo-Album-Crawler
+    git clone https://github.com/CharlesLiu7/Weibo-SuperTopic-Album-Crawler
+    cd Weibo-SuperTopic-Album-Crawler
     virtualenv env --python=python3
     source ./env/bin/activate
     pip install -r requirements.txt
@@ -21,8 +21,7 @@
 2. 设置`settings.py`
 
     * `STORE_PATH` 下载目录
-    * `COOKIES` 任意用户微博的cookies
-		
+    * `COOKIES` 任意用户微博的cookies，推荐包含以下字段 `SCF`, `SSOLoginState`, `SUB`, `SUHB`
     * `TARGETS` 目标超级话题的微博主页url
 
 3. 运行
@@ -43,7 +42,7 @@
 
 ## 感谢  Acknowledgement
 
-感谢[Lodour/Weibo-Album-Crawler](https://github.com/Lodour/Weibo-Album-Crawler)提供的API和良好的代码结构，以及在 [Issue 12](https://github.com/Lodour/Weibo-Album-Crawler/issues/12)中提出的良好建议。
+感谢 [Lodour/Weibo-Album-Crawler](https://github.com/Lodour/Weibo-Album-Crawler) 提供的API和良好的代码结构，以及在 [Issue 12](https://github.com/Lodour/Weibo-Album-Crawler/issues/12) 中提出的良好建议。
 
 ## License
 
