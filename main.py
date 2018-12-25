@@ -70,7 +70,7 @@ class Crawler(object):
                         self.logger.info(Fore.BLUE + filename)
                 except KeyboardInterrupt:
                     self.logger.error(
-                        Fore.RED + 'since_id={0}, page={1}, err={2}'.format(self.since_id, self.page, e))
+                        Fore.RED + 'since_id={0}, page={1}, err=KeyboardInterrupt'.format(self.since_id, self.page))
                     with gzip.open(self.filename, 'wb') as f:
                         pickle.dump(
                             obj=[self.since_id, self.page], file=f)  # 保存现场
@@ -101,7 +101,7 @@ class Crawler(object):
                             self.logger.info(Fore.BLUE + filename)
                     except KeyboardInterrupt:
                         self.logger.error(
-                            Fore.RED + 'since_id={0}, page={1}, err={2}'.format(self.since_id, self.page, e))
+                            Fore.RED + 'since_id={0}, page={1}, err=KeyboardInterrupt'.format(self.since_id, self.page))
                         with gzip.open(self.filename, 'wb') as f:
                             pickle.dump(
                                 obj=[self.since_id, self.page], file=f)  # 保存现场
