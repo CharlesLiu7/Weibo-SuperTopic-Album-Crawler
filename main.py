@@ -15,8 +15,9 @@ import socket
 
 class Crawler(object):
 
-    def __init__(self, target_url):
+    def __init__(self, target_url, MAX_PAGE):
         self.logger = logging.getLogger(__name__)
+        self.MAX_PAGE = MAX_PAGE
         # 目标数据
         self.logger.info(Fore.GREEN + target_url)
         self.target = WeiboApi.fetch_user_info(target_url)
@@ -30,7 +31,7 @@ class Crawler(object):
                 Fore.GREEN + 'Resuming from {0} with page={1}'.format(self.filename, self.page))
         else:
             self.since_id = ''
-            self.page = 2  # Page starts from 2
+            self.page = 1  # Page starts from 1
             self.logger.info(
                 Fore.GREEN + 'Starting from begining with page={0}'.format(self.page))
         self.root = self.__init_folder()
@@ -118,7 +119,7 @@ class Crawler(object):
                     tmp = div.attrs['action-data']
                     dic = dict([j.split('=')[0], j.split('=')[1]]
                                for j in tmp.split('&'))
-                    if 'since_id' in dic:
+                    if 'since_id' in dic and self.page < self.MAX_PAGE:
                         flag = True
                         self.since_id = urllib.parse.unquote(dic['since_id'])
                         self.page += 1
@@ -156,5 +157,5 @@ class Crawler(object):
 
 if __name__ == '__main__':
     socket.setdefaulttimeout(30)
-    if settings.TARGET:
-        Crawler(settings.TARGET).start()
+    for target in settings.TARGET:
+        Crawler(target, settings.MAX_PAGE).start()

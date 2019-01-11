@@ -23,5 +23,10 @@ STORE_PATH = './downloads'
 # 在这里粘贴你的cookies
 COOKIES = 'SCF=...;SSOLoginState=...;SUB=...;SUHB=...'
 
+# 爬取的照片翻页数目，默认设置为10000，表示全部爬取
+MAX_PAGE = 10000
+
 # 在这里添加目标用户的微博主页url
-#  TARGETS = 'https://www.weibo.com/p/10080883d7b8a4ba9ca03c1e863198265ea9fa/topic_album?from=page_100808&mod=TAB#place'
+TARGETS = [
+        #  'https://www.weibo.com/p/10080883d7b8a4ba9ca03c1e863198265ea9fa/topic_album?from=page_100808&mod=TAB#place'
+        ]
