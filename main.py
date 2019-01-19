@@ -39,7 +39,6 @@ class Crawler(object):
     def start(self):
         """开始下载图片缩略图和大图
         """
-        LARGE = 'http://photo.weibo.com/{uid}/wbphotos/large/mid/{mid}/pid/{pid}'.format
         flag = True
         while flag:
             self.logger.info(
@@ -61,14 +60,18 @@ class Crawler(object):
                     uri = 'https:'+uri  # 有些URI头部没有HTTPS，加上
                 #  print(uri)
                 try:
-                    filename = os.path.join(
-                        self.root, 'thumbnail/' + uri[uri.rfind('/')+1:])
-                    if os.path.isfile(filename):
-                        self.logger.info(Fore.BLUE + Style.DIM + filename)
-                        continue
-                    else:
-                        urllib.request.urlretrieve(uri, filename)
-                        self.logger.info(Fore.BLUE + filename)
+                    uri_pair = {'thumbnail': uri,
+                                'large': uri.replace('thumb300', 'large')}
+                    for t in uri_pair:
+                        uri = uri_pair[t]
+                        filename = os.path.join(
+                            self.root, t+'/' + uri[uri.rfind('/')+1:])
+                        if os.path.isfile(filename):
+                            self.logger.info(Fore.BLUE + Style.DIM + filename)
+                            continue
+                        else:
+                            urllib.request.urlretrieve(uri, filename)
+                            self.logger.info(Fore.BLUE + filename)
                 except KeyboardInterrupt:
                     self.logger.error(
                         Fore.RED + 'since_id={0}, page={1}, err=KeyboardInterrupt'.format(self.since_id, self.page))
@@ -79,38 +82,7 @@ class Crawler(object):
                 except Exception as e:
                     self.logger.error(
                         Fore.RED + 'Img={0}, err={1}'.format(uri, e))
-            for i in b.findAll('a'):
-                if 'action-data' in i.attrs:
-                    photoinfo = i.attrs['action-data']
-                    d = dict([j.split('=')[0], j.split('=')[1]]
-                             for j in photoinfo.split('&'))
-                    if 'uid' not in d or 'mid' not in d or 'pid' not in d:
-                        #  print(d)
-                        continue
-                    try:
-                        imgr = WeiboApi.get(
-                            LARGE(uid=d['uid'], mid=d['mid'], pid=d['pid']))
-                        bb = BeautifulSoup(imgr.text, features="lxml")
-                        uri = bb.find('img').attrs['src']
-                        filename = os.path.join(
-                            self.root, 'large/' + uri[uri.rfind('/')+1:])
-                        if os.path.isfile(filename):
-                            self.logger.info(Fore.BLUE + Style.DIM + filename)
-                            continue
-                        else:
-                            urllib.request.urlretrieve(uri, filename)
-                            self.logger.info(Fore.BLUE + filename)
-                    except KeyboardInterrupt:
-                        self.logger.error(
-                            Fore.RED + 'since_id={0}, page={1}, err=KeyboardInterrupt'.format(self.since_id, self.page))
-                        with gzip.open(self.filename, 'wb') as f:
-                            pickle.dump(
-                                obj=[self.since_id, self.page], file=f)  # 保存现场
-                        sys.exit(
-                            'Bye! Use `python main.py` to continue downloading.')
-                    except Exception as e:
-                        self.logger.error(
-                            Fore.RED + 'Img={0}, err={1}'.format(uri, e))
+
             # 模拟翻页
             flag = False
             for div in reversed(b.findAll('div')):
