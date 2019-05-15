@@ -21,7 +21,7 @@
 2. 设置`settings.py`
 
     * `STORE_PATH` 下载目录
-    * `COOKIES` 任意用户微博的cookies，推荐包含以下字段 `SCF`, `SSOLoginState`, `SUB`, `SUHB`
+    * `COOKIES` 任意用户微博的cookies，推荐包含以下字段 `SCF`, `SSOLoginState`, `SUB`, `SUHB`，[指南](./cookies.png)
 	* `MAX_PAGE` 相册翻页的最大页数，默认设置为10000，表示全部爬取
     * `TARGETS` 目标超级话题的微博主页urls
 
