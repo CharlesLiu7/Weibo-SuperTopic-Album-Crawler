@@ -97,6 +97,8 @@ class Crawler(object):
                         self.page += 1
                         break
             if not flag:
+                with gzip.open(self.filename, 'wb') as f:
+                    pickle.dump(obj=[self.since_id, self.page], file=f)  # 保存末尾
                 self.logger.info(Fore.BLUE + 'Crawler finished')
 
     def __init_folder(self):
