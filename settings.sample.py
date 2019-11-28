@@ -20,6 +20,9 @@ init(autoreset=True)
 # 存储目录
 STORE_PATH = './downloads'
 
+# 每次请求数据的间隔（为避免频繁请求被封禁）
+SLEEPTIME = 0
+
 # 在这里粘贴你的cookies
 COOKIES = 'SCF=...;SSOLoginState=...;SUB=...;SUHB=...'
 

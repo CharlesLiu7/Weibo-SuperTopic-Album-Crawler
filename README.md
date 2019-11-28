@@ -14,13 +14,13 @@
     virtualenv env --python=python3
     source ./env/bin/activate
     pip install -r requirements.txt
-	rm *.pkl.gz
     mv settings.sample.py settings.py
     ```
 
 2. 设置`settings.py`
 
     * `STORE_PATH` 下载目录
+	* `SLEEPTIME` 每次请求数据的间隔，默认为0秒
     * `COOKIES` 任意用户微博的cookies，推荐包含以下字段 `SCF`, `SSOLoginState`, `SUB`, `SUHB`，[指南](./cookies.png)
 	* `MAX_PAGE` 相册翻页的最大页数，默认设置为10000，表示全部爬取
     * `TARGETS` 目标超级话题的微博主页urls
@@ -35,10 +35,10 @@
     python main.py
 	```
 
-	每次开始一个新的话题爬取之前请执行
+	每次开始一个新的话题爬取之前请执行清除checkpoints
 
     ```shell
-	rm *.pkl.gz
+	rm -rf checkpoints
     ```
 
 ## 感谢  Acknowledgement

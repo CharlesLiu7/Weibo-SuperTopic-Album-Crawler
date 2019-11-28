@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Charles'
 from bs4 import BeautifulSoup
+import time
 import urllib
 import os
 import sys
@@ -23,9 +24,13 @@ class Crawler(object):
         self.target = WeiboApi.fetch_user_info(target_url)
         self.page_id, self.title_value = self.target['page_id'], self.target['title_value']
         # 断点数据
+        self.cpdir = './checkpoints/'
+        if not os.path.isdir(self.cpdir):
+            os.makedirs(self.cpdir)
         self.filename = self.page_id + '_resume.pkl.gz'
-        if os.path.isfile(self.filename):
-            with gzip.open(self.filename, 'rb') as f:
+        self.sleeptime = settings.SLEEPTIME
+        if os.path.isfile(os.path.join(self.cpdir, self.filename)):
+            with gzip.open(os.path.join(self.cpdir, self.filename), 'rb') as f:
                 self.since_id, self.page = pickle.load(f)
             self.logger.info(
                 Fore.GREEN + 'Resuming from {0} with page={1}'.format(self.filename, self.page))
@@ -51,7 +56,7 @@ class Crawler(object):
             except Exception as e:
                 self.logger.error(
                     Fore.RED + 'since_id={0}, page={1}, err={2}'.format(self.since_id, self.page, e))
-                with gzip.open(self.filename, 'wb') as f:
+                with gzip.open(os.path.join(self.cpdir, self.filename), 'wb') as f:
                     pickle.dump(obj=[self.since_id, self.page], file=f)  # 保存现场
                 sys.exit('Bye! Use `python main.py` to continue downloading.')
             for i in b.findAll('img'):
@@ -63,6 +68,7 @@ class Crawler(object):
                     uri_pair = {'thumbnail': uri,
                                 'large': uri.replace('thumb300', 'large')}
                     for t in uri_pair:
+                        time.sleep(self.sleeptime)
                         uri = uri_pair[t]
                         filename = os.path.join(
                             self.root, t+'/' + uri[uri.rfind('/')+1:])
@@ -75,7 +81,7 @@ class Crawler(object):
                 except KeyboardInterrupt:
                     self.logger.error(
                         Fore.RED + 'since_id={0}, page={1}, err=KeyboardInterrupt'.format(self.since_id, self.page))
-                    with gzip.open(self.filename, 'wb') as f:
+                    with gzip.open(os.path.join(self.cpdir, self.filename), 'wb') as f:
                         pickle.dump(
                             obj=[self.since_id, self.page], file=f)  # 保存现场
                     sys.exit('Bye! Use `python main.py` to continue downloading.')
@@ -97,7 +103,7 @@ class Crawler(object):
                         self.page += 1
                         break
             if not flag:
-                with gzip.open(self.filename, 'wb') as f:
+                with gzip.open(os.path.join(self.cpdir, self.filename), 'wb') as f:
                     pickle.dump(obj=[self.since_id, self.page], file=f)  # 保存末尾
                 self.logger.info(Fore.BLUE + 'Crawler finished')
 
