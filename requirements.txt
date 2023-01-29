@@ -4,6 +4,6 @@ certifi==2022.12.7
 chardet==3.0.4
 colorama==0.4.0
 idna==2.7
-lxml==4.6.3
+lxml==4.9.1
 requests==2.20.0
 urllib3==1.24.2
